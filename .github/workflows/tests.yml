@@ -52,8 +52,8 @@ jobs:
         run: composer test
 
   # phplrt itself targets PHP 8.1, but the test harness (testo) requires 8.2+. This leg
-  # resolves the dependencies for 8.1 and downgrades what has no 8.1-compatible version,
-  # together with the test sources, so the shipped library is exercised on 8.1 as written.
+  # resolves the dependencies for 8.1 and downgrades only what has no 8.1-compatible version;
+  # the project sources and tests are already 8.1-compatible and are exercised as written.
   test-php81:
     name: PHP 8.1, ubuntu-latest, ${{ matrix.stability }}
     runs-on: ubuntu-latest
@@ -83,22 +83,5 @@ jobs:
           dependency-versions: ${{ matrix.stability }}
           # testo ships intentionally unparseable IDE stubs; they are not real code to downgrade.
           skip: '*/resources/stubs/*'
-          # Test sources only; libs/*/src must stay as shipped.
-          paths: |
-            testo.php
-            libs/components/compiler/tests
-            libs/components/exception/tests
-            libs/components/lexer-builder/tests
-            libs/components/lexer/tests
-            libs/components/parser-builder/tests
-            libs/components/parser/tests
-            libs/components/position/tests
-            libs/components/source/tests
-            libs/contracts/lexer/tests
-            libs/contracts/parser/tests
-            libs/contracts/position-factory/tests
-            libs/contracts/position/tests
-            libs/contracts/source-factory/tests
-            libs/contracts/source/tests
       - name: Execute Tests
         run: composer test
